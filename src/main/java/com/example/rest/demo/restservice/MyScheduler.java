@@ -1,6 +1,6 @@
 package com.example.rest.demo.restservice;
 
-import com.example.rest.demo.restmodel.Cryptocurrency;
+import com.example.rest.demo.dto.Cryptocurrency;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,34 +16,28 @@ public class MyScheduler {
     @Autowired
     private CryptoService cryptoService;
 
-    public MyScheduler() throws IOException {
+    final String sol = "https://api.coinlore.net/api/ticker/?id=48543";
+    final String eth = "https://api.coinlore.net/api/ticker/?id=80";
+    final String btc = "https://api.coinlore.net/api/ticker/?id=90";
+
+    public MyScheduler() {
+    }
+
+    public void scheduled(String urlCrypto) {
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.configure(JsonParser.Feature.AUTO_CLOSE_SOURCE, true);
+        try {
+            Cryptocurrency[] url = objectMapper.readValue(new URL(urlCrypto), Cryptocurrency[].class);
+            cryptoService.saveCrypto(url);
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+        }
     }
 
     @Scheduled(cron = "0 0/1 * * * ?")
-    void doWork() throws IOException {
-
-        ObjectMapper objectMapper = new ObjectMapper();
-        objectMapper.configure(JsonParser.Feature.AUTO_CLOSE_SOURCE, true);
-
-        try {
-            Cryptocurrency[] url_sol = objectMapper.readValue(new URL("https://api.coinlore.net/api/ticker/?id=48543"), Cryptocurrency[].class);
-            cryptoService.saveCrypto(url_sol);
-        } catch (IOException e) {
-            System.out.println(e.getMessage());
-        }
-
-        try {
-            Cryptocurrency[] url_eth = objectMapper.readValue(new URL("https://api.coinlore.net/api/ticker/?id=80"), Cryptocurrency[].class);
-            cryptoService.saveCrypto(url_eth);
-        } catch (IOException e) {
-            System.out.println(e.getMessage());
-        }
-
-        try {
-            Cryptocurrency[] url_bts = objectMapper.readValue(new URL("https://api.coinlore.net/api/ticker/?id=90"), Cryptocurrency[].class);
-            cryptoService.saveCrypto(url_bts);
-        } catch (IOException e) {
-            System.out.println(e.getMessage());
-        }
+    void doWork() {
+        scheduled(sol);
+        scheduled(eth);
+        scheduled(btc);
     }
 }

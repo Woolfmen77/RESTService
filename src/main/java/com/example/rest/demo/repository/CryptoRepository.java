@@ -6,6 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface CryptoRepository extends JpaRepository<Cryptocurrency, Long> {
-
     Cryptocurrency findBySymbol(String symbol);
 }

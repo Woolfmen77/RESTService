@@ -1,4 +1,4 @@
-package com.example.rest.demo.restmodel;
+package com.example.rest.demo.dto;
 
 import lombok.Getter;
 import lombok.Setter;

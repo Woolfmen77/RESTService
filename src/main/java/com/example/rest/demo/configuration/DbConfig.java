@@ -13,12 +13,10 @@ public class DbConfig {
 
     @Bean
     public CommandLineRunner commandLineRunner(CryptoRepository cryptoRepository) {
-        return args -> {
-            cryptoRepository.saveAll(List.of(
-                    new Cryptocurrency(90, "BTC", 0.00),
-                    new Cryptocurrency(80, "ETH", 0.00),
-                    new Cryptocurrency(48543, "SOL", 0.00)
-            ));
-        };
+        return args -> cryptoRepository.saveAll(List.of(
+                new Cryptocurrency(90, "BTC"),
+                new Cryptocurrency(80, "ETH"),
+                new Cryptocurrency(48543, "SOL")
+        ));
     }
 }
